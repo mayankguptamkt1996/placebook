@@ -6,7 +6,7 @@ export default function Users() {
         'id':1,
         'name':'mayank Gupta',
         'place':2,
-        'image':'https://media.istockphoto.com/id/499599645/photo/roan-mountain-sunset.jpg?s=612x612&w=0&k=20&c=zs_rDcRxe_UKGbAyeBX8S7NEho0P8dyK8zkE9sdr3Xw='
+        'image':'https://t3.ftcdn.net/jpg/11/43/08/70/360_F_1143087025_H4lXhJUOzxxWkHCJmMplbSRG36rNX9XM.jpg'
     }]
 
   return (
