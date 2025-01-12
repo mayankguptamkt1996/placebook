@@ -5,8 +5,10 @@ import { CSSTransition } from 'react-transition-group';
 import './SideDrawer.css';
 
 const SideDrawer = props => {
+  const Ref = React.useRef(null)
   const content = (
     <CSSTransition
+    nodeRef={Ref}
       in={props.show}
       timeout={200}
       classNames="slide-in-left"
