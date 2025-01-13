@@ -4,7 +4,6 @@ import ReactDOM from "react-dom";
 import Backdrop from "./Backdrop";
 import { CSSTransition } from "react-transition-group";
 const ModelOverlay = (props) => {
-  console.log(props.header);
   const content = (
     <div className={`modal ${props.className}`} style={props.style}>
       <header className={`modal__header ${props.headerClass}`}>

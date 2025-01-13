@@ -11,8 +11,8 @@ export default function UserPalces() {
             address: 'Dharmapuri, Forest Colony, Tajganj, Agra, Uttar Pradesh 282001',
             imageUrl: 'https://media.tacdn.com/media/attractions-splice-spp-674x446/06/71/c3/53.jpg',
             location:{
-                lag:27.8727292,
-                lat:76.9927381
+                lat: 27.8727292,
+                lng: 76.9927381
             },
             creator: 'u1'
         },
@@ -23,8 +23,8 @@ export default function UserPalces() {
             address: 'Dharmapuri, Forest Colony, Tajganj, Agra, Uttar Pradesh 282001',
             imageUrl: 'https://media.tacdn.com/media/attractions-splice-spp-674x446/06/71/c3/53.jpg',
             location:{
-                lag:27.8727292,
-                lat:76.9927381
+                lat: 27.8727292,
+                lng: 76.9927381
             },
             creator: 'u2'
         },
