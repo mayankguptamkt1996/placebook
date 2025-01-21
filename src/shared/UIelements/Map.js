@@ -4,15 +4,16 @@ import React from 'react'
 
 export default function Map(props) {
     const mapRef = useRef();
-    const { AdvancedMarkerElement } =  window.google.maps.importLibrary("marker");
+    // const { AdvancedMarkerElement } =  window.google.maps.importLibrary("marker");
     const {center,zoom} = props;
     useEffect(()=>{
         const map = new window.google.maps.Map(mapRef.current,{
             center:center,
-            zoom:zoom
+            zoom:zoom,
+            mapId: "DEMO_MAP_ID",
         });
     
-        new window.google.maps.Marker({position: center, map: map});
+        new window.google.maps.marker.AdvancedMarkerElement({position: center, map: map});
     },[center,zoom])
 
     
