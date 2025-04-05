@@ -1,17 +1,88 @@
 import React from "react";
 import "./NewPlace.css";
+import { useCallback,useReducer } from "react";
 import Input from "../../shared/FormElements/Input";
-import { VALIDATOR_REQUIRE } from "../../shared/util/validators";
+import { VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE } from "../../shared/util/validators";
+import Button from "../../shared/FormElements/Button"
 export default function NewPlace() {
+
+  const formReducer=(state,action)=>
+  {
+    switch(action.type)
+    {
+      case"INPUT_CHANGE":
+        let formIsValid = true;
+        for(const inputId in state.inputs)
+        {
+          if(inputId===action.inputId)
+          {formIsValid = formIsValid && action.isValid}
+          else{
+            formIsValid = formIsValid && state.inputs[inputId].isValid
+          }
+        }
+        return {
+          ...state,
+          inputs:{
+            ...state.inputs,
+            [action.inputId] : {value:action.value,isValid:action.isValid}
+          },
+          isValid : formIsValid 
+        };
+      default: return state;
+    }
+  }
+
+  const [formState,dispatch] = useReducer(formReducer,{
+    inputs:{
+      title:{
+        value:'',
+        isValid:false
+      },
+      description:{
+        value:'',
+        isValid:false
+      }
+    },
+    isValid:false
+  });
+
+  const titleInputHandler = useCallback((id,value,isValid)=>{
+    dispatch({type:"INPUT_CHANGE",  value: value, isValid:isValid,inputId:id});
+  },[]);
+
+  const placeSubmitHandler = (event) =>{
+    event.preventDefault();
+    console.log(formState.inputs);
+  }
+
+
   return (
-    <form className="place-form">
+    <form className="place-form" onSubmit={placeSubmitHandler}>
       <Input
+      id = "title"
         element="input"
-        type="text"
         label="Title"
         validators={[VALIDATOR_REQUIRE()]}
         erroText="Please enter a valid title"
+        onInput = {titleInputHandler}
       />
+      <Input
+      id = "description"
+        element="textArea"
+        label="Description"
+        validators={[VALIDATOR_MINLENGTH(5)]}
+        erroText="Please enter a valid description (at least 5 characters)"
+        onInput = {titleInputHandler}
+      />
+      <Input
+      id = "address"
+        element="input"
+        label="Address"
+        validators={[VALIDATOR_REQUIRE]}
+        erroText="Please enter a valid address"
+        onInput = {titleInputHandler}
+      />
+      <Button type="submit" disabled={!formState.isValid}>Add Place</Button>
     </form>
   );
 }
