@@ -3,7 +3,8 @@ import { Route, BrowserRouter as Router, Routes, Navigate  } from 'react-router-
 import NewPlace from './places/pages/NewPlace';
 import Users from './user/pages/Users';
 import Navigation from './shared/Navigation/MainNavigation'
-import UserPalces from './places/pages/UserPalces';
+import UserPlaces from './places/pages/UserPlaces';
+import UpdatePlace from './places/pages/UpdatePlace';
 
 function App() {
   return (
@@ -12,8 +13,9 @@ function App() {
     <main>
     <Routes>
       <Route path ="/" element={<Users/>}/>
-      <Route path ="/:userId/places" element={<UserPalces/>}/>
+      <Route path ="/:userId/places" element={<UserPlaces/>}/>
       <Route path ="/places/new" exact element={<NewPlace/>}/>
+      <Route path ="/places/:placeId" element={<UpdatePlace/>}/>
     </Routes>
     {/* <Navigate to="/"/> */}
     </main>

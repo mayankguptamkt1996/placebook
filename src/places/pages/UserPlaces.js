@@ -2,7 +2,7 @@ import React from 'react'
 import { useParams } from 'react-router';
 import PlacesList from '../components/PlacesList'
 
-export default function UserPalces() {
+export default function UserPlaces() {
     const DUMMY_PLACES = [
         {
             id: 'p1',
