@@ -18,7 +18,7 @@ export default function PlacesList(props) {
     
     return(
         <ul className='place-list'>
-            {props.items.map(places =>
+            {props.items.map(places => (
             <PlacesItem key = {places.id}
             id = {places.id}
             title = {places.title}
@@ -28,7 +28,7 @@ export default function PlacesList(props) {
             createrId = {places.creator}
             coordinates = {places.location}
             />
-            )
+            ))
             
             }
         </ul>
