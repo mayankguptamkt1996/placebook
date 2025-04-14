@@ -4,13 +4,19 @@ import Button from "../../shared/FormElements/Button";
 import "./PlacesItem.css";
 import Modal from "../../shared/UIelements/Modal";
 import Map from "../../shared/UIelements/Map";
+import ErrorModal from '../../shared/UIelements/ErrorModal';
+import LoadingSpinner from '../../shared/UIelements/LoadingSpinner';
 import { AuthContext } from '../../shared/context/auth-context';
-export default function PlacesItem(props) {
+import { useHttpClient } from '../../shared/hooks/http-hook';
+
+const PlacesItem = props => {
+  const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const auth = useContext(AuthContext);
   const [showMap, setShowMap] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   const openMapHandler = () => setShowMap(true);
+
   const closeMapHandler = () => setShowMap(false);
 
   const showDeleteWarningHandler = () => {
@@ -21,13 +27,20 @@ export default function PlacesItem(props) {
     setShowConfirmModal(false);
   };
 
-  const confirmDeleteHandler = () => {
+  const confirmDeleteHandler = async () => {
     setShowConfirmModal(false);
-    console.log('DELETING...');
+    try {
+      await sendRequest(
+        `http://localhost:5000/places/${props.id}`,
+        'DELETE'
+      );
+      props.onDelete(props.id);
+    } catch (err) {}
   };
 
   return (
     <React.Fragment>
+      <ErrorModal error={error} onClear={clearError} />
       <Modal
         show={showMap}
         onCancel={closeMapHandler}
@@ -37,7 +50,7 @@ export default function PlacesItem(props) {
         footer={<Button onClick={closeMapHandler}>CLOSE</Button>}
       >
         <div className="map-container">
-         <Map center = {props.coordinates} zoom={16}/>
+          <Map center={props.coordinates} zoom={16} />
         </div>
       </Modal>
       <Modal
@@ -62,7 +75,8 @@ export default function PlacesItem(props) {
         </p>
       </Modal>
       <li className="place-item">
-        <Card className="place-item_-content">
+        <Card className="place-item__content">
+          {isLoading && <LoadingSpinner asOverlay />}
           <div className="place-item__image">
             <img src={props.image} alt={props.title} />
           </div>
@@ -71,15 +85,15 @@ export default function PlacesItem(props) {
             <h3>{props.address}</h3>
             <p>{props.description}</p>
           </div>
-          <div className="place-item_-actions">
+          <div className="place-item__actions">
             <Button inverse onClick={openMapHandler}>
-              View on Map
+              VIEW ON MAP
             </Button>
-            {auth.isLoggedIn && (
+            {auth.userId === props.creatorId && (
               <Button to={`/places/${props.id}`}>EDIT</Button>
             )}
 
-            {auth.isLoggedIn && (
+            {auth.userId === props.creatorId && (
               <Button danger onClick={showDeleteWarningHandler}>
                 DELETE
               </Button>
@@ -89,4 +103,6 @@ export default function PlacesItem(props) {
       </li>
     </React.Fragment>
   );
-}
+};
+
+export default PlacesItem;

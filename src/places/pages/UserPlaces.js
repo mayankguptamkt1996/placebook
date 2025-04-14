@@ -1,37 +1,48 @@
-import React from 'react'
-import { useParams } from 'react-router';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import PlacesList from '../components/PlacesList'
+import ErrorModal from '../../shared/UIelements/ErrorModal';
+import LoadingSpinner from '../../shared/UIelements/LoadingSpinner';
+import { useHttpClient } from '../../shared/hooks/http-hook';
 
-export default function UserPlaces() {
-    const DUMMY_PLACES = [
-        {
-            id: 'p1',
-            title: 'Taj Mahal',
-            description: 'Welcome to Taj Mahal, Standing majestically on the banks of River Yamuna. Taj Mahal Taj Mahal is famous for Own beauty and one of the wonders of the world.',
-            address: 'Dharmapuri, Forest Colony, Tajganj, Agra, Uttar Pradesh 282001',
-            imageUrl: 'https://media.tacdn.com/media/attractions-splice-spp-674x446/06/71/c3/53.jpg',
-            location:{
-                lat: 27.8727292,
-                lng: 76.9927381
-            },
-            creator: 'u1'
-        },
-        {
-            id: 'p2',
-            title: 'Taj Mahal',
-            description: 'Welcome to Taj Mahal, Standing majestically on the banks of River Yamuna. Taj Mahal Taj Mahal is famous for Own beauty and one of the wonders of the world.',
-            address: 'Dharmapuri, Forest Colony, Tajganj, Agra, Uttar Pradesh 282001',
-            imageUrl: 'https://media.tacdn.com/media/attractions-splice-spp-674x446/06/71/c3/53.jpg',
-            location:{
-                lat: 27.8727292,
-                lng: 76.9927381
-            },
-            creator: 'u2'
-        },
-    ];
+const UserPlaces = () => {
+    const [loadedPlaces, setLoadedPlaces] = useState();
+    const { isLoading, error, sendRequest, clearError } = useHttpClient();
   
     const userId = useParams().userId;
-    const loadedPlaces = DUMMY_PLACES.filter(place => place.creator === userId);
-    return (<PlacesList items={loadedPlaces}/>
-  )
-}
+  
+    useEffect(() => {
+      const fetchPlaces = async () => {
+        try {
+          const responseData = await sendRequest(
+            `http://localhost:5000/places/user/${userId}`
+          );
+          setLoadedPlaces(responseData.places);
+        } catch (err) {}
+      };
+      fetchPlaces();
+    }, [sendRequest, userId]);
+  
+    const placeDeletedHandler = deletedPlaceId => {
+      setLoadedPlaces(prevPlaces =>
+        prevPlaces.filter(place => place.id !== deletedPlaceId)
+      );
+    };
+  
+    return (
+      <React.Fragment>
+        <ErrorModal error={error} onClear={clearError} />
+        {isLoading && (
+          <div className="center">
+            <LoadingSpinner />
+          </div>
+        )}
+        {!isLoading && loadedPlaces && (
+          <PlacesList items={loadedPlaces} onDeletePlace={placeDeletedHandler} />
+        )}
+      </React.Fragment>
+    );
+  };
+  
+  export default UserPlaces;
+  
