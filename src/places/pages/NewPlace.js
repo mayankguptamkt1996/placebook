@@ -46,7 +46,7 @@ const NewPlace = () => {
         }),
         { 'Content-Type': 'application/json' }
       );
-      Navigate.push('/');
+      Navigate('/');
     } catch (err) {}
   };
 

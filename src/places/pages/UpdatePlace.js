@@ -75,7 +75,7 @@ const UpdatePlace = () => {
           'Content-Type': 'application/json'
         }
       );
-      Navigate.push('/' + auth.userId + '/places');
+      Navigate('/' + auth.userId + '/places');
     } catch (err) {}
   };
 
