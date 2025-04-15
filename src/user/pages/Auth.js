@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-
+import { useNavigate } from 'react-router';
 import Card from '../../shared/UIelements/Card';
 import Input from '../../shared/FormElements/Input';
 import Button from '../../shared/FormElements/Button';
@@ -15,8 +15,10 @@ import { AuthContext } from '../../shared/context/auth-context';
 import ErrorModal from '../../shared/UIelements/ErrorModal';
 import LoadingSpinner from '../../shared/UIelements/LoadingSpinner';
 
+
 const Auth = () => {
   const auth = useContext(AuthContext);
+  const Navigate = useNavigate();
   const [isLoginMode, setIsLoginMode] = useState(true);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
@@ -75,6 +77,7 @@ const Auth = () => {
           }
         );
         auth.login(responseData.user.id);
+        Navigate('/');
       } catch (err) {}
     } else {
       try {
@@ -92,8 +95,10 @@ const Auth = () => {
         );
 
         auth.login(responseData.user.id);
+        Navigate('/');
       } catch (err) {}
     }
+
   };
 
   return (
