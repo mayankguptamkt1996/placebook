@@ -11,7 +11,7 @@ export const useHttpClient = () => {
       setIsLoading(true);
       const httpAbortCtrl = new AbortController();
       activeHttpRequests.current.push(httpAbortCtrl);
-
+      console.log(body);
       try {
         const response = await fetch(url, {
           method,
@@ -19,9 +19,8 @@ export const useHttpClient = () => {
           headers,
           signal: httpAbortCtrl.signal
         });
-
         const responseData = await response.json();
-
+        console.log(response);
         activeHttpRequests.current = activeHttpRequests.current.filter(
           reqCtrl => reqCtrl !== httpAbortCtrl
         );
@@ -33,11 +32,7 @@ export const useHttpClient = () => {
         setIsLoading(false);
         return responseData;
       } catch (err) {
-        if (err.name === 'AbortError') {
-            // silently ignore the abort error
-            return;
-          }
-        setError(err.message);
+        setError(err.name);
         setIsLoading(false);
         throw err;
       }
@@ -49,12 +44,12 @@ export const useHttpClient = () => {
     setError(null);
   };
 
-  useEffect(() => {
-    return () => {
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      activeHttpRequests.current.forEach(abortCtrl => abortCtrl.abort());
-    };
-  }, []);
+  // useEffect(() => {
+  //   return () => {
+  //     // eslint-disable-next-line react-hooks/exhaustive-deps
+  //     activeHttpRequests.current.forEach(abortCtrl => abortCtrl.abort());
+  //   };
+  // }, []);
 
   return { isLoading, error, sendRequest, clearError };
 };

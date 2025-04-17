@@ -14,7 +14,7 @@ import { useHttpClient } from '../../shared/hooks/http-hook';
 import { AuthContext } from '../../shared/context/auth-context';
 import ErrorModal from '../../shared/UIelements/ErrorModal';
 import LoadingSpinner from '../../shared/UIelements/LoadingSpinner';
-
+import ImageUpload from '../../shared/FormElements/ImageUpload';
 
 const Auth = () => {
   const auth = useContext(AuthContext);
@@ -41,7 +41,8 @@ const Auth = () => {
       setFormData(
         {
           ...formState.inputs,
-          name: undefined
+          name: undefined,
+          image: undefined
         },
         formState.inputs.email.isValid && formState.inputs.password.isValid
       );
@@ -51,6 +52,10 @@ const Auth = () => {
           ...formState.inputs,
           name: {
             value: '',
+            isValid: false
+          },
+          image: {
+            value: null,
             isValid: false
           }
         },
@@ -76,25 +81,25 @@ const Auth = () => {
             'Content-Type': 'application/json'
           }
         );
-        auth.login(responseData.user.id);
+        auth.login(responseData.userId,responseData.token);
         Navigate('/');
       } catch (err) {}
     } else {
       try {
+        const formData = new FormData();
+        formData.append('email', formState.inputs.email.value);
+        formData.append('name', formState.inputs.name.value);
+        formData.append('password', formState.inputs.password.value);
+        formData.append('image', formState.inputs.image.value);
+        for (let [key, value] of formData.entries()) {
+          console.log(`${key}:`, value);
+        }
         const responseData = await sendRequest(
           'http://localhost:5000/users/signup',
           'POST',
-          JSON.stringify({
-            name: formState.inputs.name.value,
-            email: formState.inputs.email.value,
-            password: formState.inputs.password.value
-          }),
-          {
-            'Content-Type': 'application/json'
-          }
+          formData
         );
-
-        auth.login(responseData.user.id);
+        auth.login(responseData.userId, responseData.token);
         Navigate('/');
       } catch (err) {}
     }
@@ -118,6 +123,14 @@ const Auth = () => {
               validators={[VALIDATOR_REQUIRE()]}
               errorText="Please enter a name."
               onInput={inputHandler}
+            />
+          )}
+          {!isLoginMode && (
+            <ImageUpload
+              center
+              id="image"
+              onInput={inputHandler}
+              errorText="Please provide an image."
             />
           )}
           <Input
