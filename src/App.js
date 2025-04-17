@@ -15,6 +15,7 @@ function App() {
   const { token, login, logout, userId } = useAuth();
 
   let routes;
+  console.log(token);
   if (token) {
     routes = (
       <Routes>
@@ -22,7 +23,7 @@ function App() {
       <Route path ="/:userId/places" element={<UserPlaces/>}/>
       <Route path ="/places/new" exact element={<NewPlace/>}/>
       <Route path ="/places/:placeId" element={<UpdatePlace/>}/>
-        {/* <Navigate to="/" /> */}
+      <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     );
   } else {
@@ -33,14 +34,14 @@ function App() {
         <Route path="/auth"
           element={<Auth/>}
         />
-        {/* <Navigate to="/auth" /> */}
+        <Route path="*" element={<Navigate to="/auth" />} />
       </Routes>
     );
   }
 
   return (
     <AuthContext.Provider
-      value={{ userId: userId, token:token, login: login, logout: logout }}
+      value={{ isLoggedIn:!!token, userId: userId, token:token, login: login, logout: logout }}
     >
   <Router>
     <Navigation />

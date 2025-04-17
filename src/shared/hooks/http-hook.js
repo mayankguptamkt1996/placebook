@@ -1,9 +1,9 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
-
+import { useNavigate } from 'react-router';
 export const useHttpClient = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState();
-
+  const Navigate = useNavigate();
   const activeHttpRequests = useRef([]);
 
   const sendRequest = useCallback(
@@ -20,7 +20,6 @@ export const useHttpClient = () => {
           signal: httpAbortCtrl.signal
         });
         const responseData = await response.json();
-        console.log(response);
         activeHttpRequests.current = activeHttpRequests.current.filter(
           reqCtrl => reqCtrl !== httpAbortCtrl
         );
@@ -32,7 +31,7 @@ export const useHttpClient = () => {
         setIsLoading(false);
         return responseData;
       } catch (err) {
-        setError(err.name);
+        setError(err.message);
         setIsLoading(false);
         throw err;
       }
@@ -41,6 +40,11 @@ export const useHttpClient = () => {
   );
 
   const clearError = () => {
+    if(error == "Could not find places for the provided user id.")
+    {
+    setError(null);
+    Navigate('/');
+    }
     setError(null);
   };
 

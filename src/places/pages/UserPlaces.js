@@ -8,7 +8,6 @@ import { useHttpClient } from '../../shared/hooks/http-hook';
 const UserPlaces = () => {
     const [loadedPlaces, setLoadedPlaces] = useState();
     const { isLoading, error, sendRequest, clearError } = useHttpClient();
-  
     const userId = useParams().userId;
   
     useEffect(() => {
@@ -21,8 +20,9 @@ const UserPlaces = () => {
         } catch (err) {}
       };
       fetchPlaces();
+
     }, [sendRequest, userId]);
-  
+    
     const placeDeletedHandler = deletedPlaceId => {
       setLoadedPlaces(prevPlaces =>
         prevPlaces.filter(place => place.id !== deletedPlaceId)
